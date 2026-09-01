@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "resume-pdf-parser"
+version = "0.1.0"
+description = "可恢复、可审计的 PDF 简历解析与 JD 匹配命令行工具"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pydantic>=2.7,<3",
+  "PyMuPDF>=1.24,<2",
+  "tomli>=2.0; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<9",
+  "ruff>=0.6,<1",
+]
+
+ocr = [
+  "pytesseract>=0.3,<1",
+  "Pillow>=10,<12",
+]
+
+local-model = [
+  "sentence-transformers>=3,<4",
+]
+
+[project.scripts]
+resume-cli = "resume_parser.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

@@ -1,0 +1,27 @@
+# 复制为 config.toml 后按需修改；config.toml 已被 git 忽略
+
+[runtime]
+# 模型不可用、超时或返回非法 JSON 时自动使用规则结果
+fallback_enabled = true
+
+[llm]
+# false 时完全不调用 LLM，但仍可使用规则和 --mock 逻辑
+enabled = true
+provider = "ollama"
+base_url = "http://localhost:11434/v1"
+model = "qwen2.5:7b"
+api_key = ""
+timeout_seconds = 20
+# custom provider 必填，例如 data.output.content；支持数组下标
+response_path = ""
+# text：路径内容是 JSON 字符串；json：路径内容本身是 JSON 对象/数组
+content_type = "text"
+
+[local_model]
+# 启用后 score 会使用 SentenceTransformer 做技能语义匹配
+enabled = false
+embedding_model = "BAAI/bge-small-zh-v1.5"
+
+[ocr]
+# 无文本层时是否自动调用 OCR；启用前需安装 OCR 可选依赖和系统 Tesseract
+enabled = true
