@@ -76,11 +76,17 @@ def _read_config_file(config_path: str | Path) -> dict[str, Any]:
         with path.open("rb") as handle:
             parsed = tomllib.load(handle)
     except (OSError, tomllib.TOMLDecodeError) as exc:
+        details = {"path": str(path)}
+        if isinstance(exc, tomllib.TOMLDecodeError):
+            if getattr(exc, "lineno", None) is not None:
+                details["line"] = exc.lineno
+            if getattr(exc, "colno", None) is not None:
+                details["column"] = exc.colno
         raise AppError(
             "config_invalid",
             "配置文件无法读取或不是合法 TOML。",
             "请检查 config.toml 的语法。",
-            {"path": str(path)},
+            details,
         ) from exc
     if not isinstance(parsed, dict):
         raise AppError("config_invalid", "配置文件根节点必须是对象。", "请检查 config.toml 的结构。")

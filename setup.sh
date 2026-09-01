@@ -92,12 +92,12 @@ import sys
 path, embedding_model, enabled = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
 text = path.read_text(encoding="utf-8")
 replacement = f'enabled = {enabled}\nembedding_model = "{embedding_model}"'
-section = re.search(r'(?ms)^\[local_model\]\s*(.*?)(?=^\[|\Z)', text)
+section = re.search(r'(?ms)^\[local_model\][ \t]*\n(.*?)(?=^\[|\Z)', text)
 if section:
     body = section.group(1)
     body = re.sub(r'(?m)^enabled\s*=\s*(?:true|false)\s*$', f'enabled = {enabled}', body, count=1)
     body = re.sub(r'(?m)^embedding_model\s*=\s*".*"\s*$', f'embedding_model = "{embedding_model}"', body, count=1)
-    text = text[:section.start(1)] + body + text[section.end(1):]
+    text = text[:section.start(1)] + body.rstrip() + "\n\n" + text[section.end(1):].lstrip("\n")
 else:
     text = text.rstrip() + f'\n\n[local_model]\n{replacement}\n'
 path.write_text(text, encoding="utf-8")
@@ -110,10 +110,10 @@ import sys
 
 path, enabled = Path(sys.argv[1]), sys.argv[2]
 text = path.read_text(encoding="utf-8")
-section = re.search(r'(?ms)^\[ocr\]\s*(.*?)(?=^\[|\Z)', text)
+section = re.search(r'(?ms)^\[ocr\][ \t]*\n(.*?)(?=^\[|\Z)', text)
 if section:
     body = re.sub(r'(?m)^enabled\s*=\s*(?:true|false)\s*$', f'enabled = {enabled}', section.group(1), count=1)
-    text = text[:section.start(1)] + body + text[section.end(1):]
+    text = text[:section.start(1)] + body.rstrip() + "\n\n" + text[section.end(1):].lstrip("\n")
 else:
     text = text.rstrip() + f'\n\n[ocr]\nenabled = {enabled}\n'
 path.write_text(text, encoding="utf-8")
