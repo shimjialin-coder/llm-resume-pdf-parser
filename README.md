@@ -12,6 +12,8 @@
 
 安装脚本会让你选择本地 Python 或 Docker，安装依赖，询问 LLM 配置，并将 `resume-cli` 链接到 `~/.local/bin`。安装完成后重新打开终端，或执行向导输出的 PATH 命令，即可直接使用 `resume-cli`。
 
+如果安装过程中断或使用过旧版本脚本，先删除项目内的 `.venv` 后重新执行 `./setup.sh`；向导会先安装 `setuptools` 和 `wheel` 等构建工具，再安装项目本身。
+
 本地 Python 模式要求 Python 3.10+；Docker 模式要求 Docker Desktop。安装向导会询问是否安装 OCR 依赖。配置位于 `config.toml` 的 `[ocr].enabled`；默认启用，扫描型 PDF 无文本层时自动回退到 OCR，也可用 `--no-ocr` 临时禁用。
 
 LLM 配置位于 `config.toml`，模板为 `config.toml.example`。默认关闭 LLM、开启失败降级。安装向导会单独询问是否安装并启用本地语义模型；未选择时不会安装 `sentence-transformers`。配置启用本地模型后，程序会检查依赖和模型缓存，缺失时返回重新运行 `./setup.sh` 的引导，不会静默退回规则。可配置 OpenAI-compatible、Ollama、DeepSeek 或 `custom` provider；API Key 建议使用 `RESUME_AI_API_KEY` 环境变量，不要提交到仓库。

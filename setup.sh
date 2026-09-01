@@ -35,7 +35,8 @@ read -r ENABLE_OCR
 if [[ "${RUNTIME_CHOICE}" == "1" ]]; then
   info "创建本地虚拟环境并安装依赖。"
   "${PYTHON_BIN}" -m venv "${PROJECT_DIR}/.venv"
-  "${PROJECT_DIR}/.venv/bin/python" -m pip install --upgrade pip
+  # 使用 --no-build-isolation 时，构建后端必须先安装在当前虚拟环境中。
+  "${PROJECT_DIR}/.venv/bin/python" -m pip install --upgrade pip setuptools wheel
   "${PROJECT_DIR}/.venv/bin/python" -m pip install --no-build-isolation -e "${PROJECT_DIR}[dev]"
   if [[ "${OCR_ENABLED}" == "true" ]]; then
     "${PROJECT_DIR}/.venv/bin/python" -m pip install --no-build-isolation -e "${PROJECT_DIR}[ocr]"
